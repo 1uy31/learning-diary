@@ -1,0 +1,45 @@
+[tool.poetry]
+name = "learning_diary"
+version = "0.1.0"
+description = "Tool to keep track of studied stuff."
+
+license = "MIT"
+
+authors = [
+    "1uy31"
+]
+
+readme = "README.md"  # Markdown files are supported
+
+#repository = "https://github.com/python-poetry/poetry"
+#homepage = "https://github.com/python-poetry/poetry"
+
+#keywords = ["packaging", "poetry"]
+
+[tool.poetry.dependencies]
+python = "3.10.0"  # Compatible python versions must be declared here
+python-dotenv = "0.19.2"
+Flask = "2.0.3"
+Flask-Migrate = "3.1.0"
+Flask-SQLAlchemy = "2.5.1"
+SQLAlchemy = "^1.4.31"
+psycopg2 = "2.9.3"
+graphene = "2.1.9"
+graphene-sqlalchemy = "^2.3.0"
+Flask-GraphQL = "2.0.1"
+
+[tool.poetry.dev-dependencies]
+black = "^22.1.0"
+isort = "^5.10.1"
+autoflake = "^1.4"
+flake8 = "^4.0.1"
+pylint = "^2.12.2"
+mypy = "^0.931"
+pytest = "^7.0.1"
+Faker = "^13.0.0"
+coverage = "^6.3.1"
+tox = "^3.24.5"
+
+
+[tool.poetry.scripts]
+#my-script = "#my-scrip"
