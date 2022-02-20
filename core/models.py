@@ -10,8 +10,8 @@ with current_app.app_context():
 
 class ModelMixin:
     @declared_attr
-    def __tablename__(cls):
-        return cls.__name__.lower()
+    def __tablename__(cls):  # pylint: disable=no-self-argument
+        return cls.__name__.lower()  # type: ignore
 
     id = Column(Integer, primary_key=True)
 

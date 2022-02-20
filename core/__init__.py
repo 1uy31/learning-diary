@@ -3,7 +3,6 @@ from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
-from core.diary import diary_bp
 from instance.config import DefaultConfig
 
 env_values = dotenv_values(".env")

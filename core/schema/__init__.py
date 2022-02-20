@@ -5,14 +5,19 @@ from graphene_sqlalchemy import SQLAlchemyConnectionField
 from core.models import Category as CategoryModel
 from core.models import Diary as DiaryModel
 from core.models import Note as NoteModel
-from core.schema.category import CategoryNode
+from core.schema.category import CategoryNode, CreateCategory
 from core.schema.diary import DiaryNode
 from core.schema.note import NoteNode
-from core.schema.search import SearchResult
+
+
+class SearchResult(graphene.Union):
+    class Meta:
+        types = (CategoryNode, DiaryNode, NoteNode)
 
 
 class RootQuery(graphene.ObjectType):
     node = relay.Node.Field()
+
     search = graphene.List(
         SearchResult, q=graphene.String()
     )  # List field for search results
@@ -23,7 +28,13 @@ class RootQuery(graphene.ObjectType):
     all_notes = SQLAlchemyConnectionField(NoteNode.connection)
 
     def resolve_search(self, info, **args):
-        q = args.get("q")  # Search query
+        """
+        TODO: complete the function
+        :param info:
+        :param args:
+        :return:
+        """
+        keyword = args.get("q")  # Search query
 
         # Get queries
         categories_query = CategoryNode.get_query(info)
@@ -31,23 +42,29 @@ class RootQuery(graphene.ObjectType):
         notes_query = NoteNode.get_query(info)
 
         # Query categories
-        categories = categories_query.filter(CategoryModel.name.contains(q)).all()
+        categories = categories_query.filter(CategoryModel.name.contains(keyword)).all()
 
         # Query diaries
         diaries = diaries_query.filter(
-            DiaryModel.topic.contains(q)
-            | (DiaryModel.category.any(CategoryModel.name.contains(q)))
+            DiaryModel.topic.contains(keyword)
+            | (DiaryModel.category.any(CategoryModel.name.contains(keyword)))
         ).all()
 
         # Query notes
         notes = notes_query.filter(
-            NoteModel.text.contains(q)
-            | (DiaryModel.note.any(NoteModel.text.contains(q)))
+            NoteModel.text.contains(keyword)
+            | (DiaryModel.note.any(NoteModel.text.contains(keyword)))
         ).all()
 
         return categories + diaries + notes  # Combine lists
 
 
+class RootMutation(graphene.ObjectType):
+    create_category = CreateCategory.Field()
+
+
 schema = graphene.Schema(
-    query=RootQuery, types=[CategoryNode, DiaryNode, NoteNode, SearchResult]
+    query=RootQuery,
+    mutation=RootMutation,
+    types=[CategoryNode, DiaryNode, NoteNode, SearchResult],
 )

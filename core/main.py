@@ -1,3 +1,5 @@
+from typing import Optional
+
 from flask_graphql import GraphQLView
 
 from core import create_app
@@ -15,5 +17,10 @@ with app.app_context():
         ),
     )
 
-# Register blueprints:
-# app.register_blueprint(diary_bp)
+
+@app.teardown_appcontext
+def shutdown_session(_: Optional[BaseException] = None) -> None:
+    """
+    Close database session before closing the app.
+    """
+    app.extensions["migrate"].db.session.remove()
