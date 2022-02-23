@@ -1,1 +1,4 @@
 TESTING = True
+SQLALCHEMY_DATABASE_URI = (
+    "postgresql://p0stgr3s:p0stgr3s@localhost:5432/test_tech_learning_diary"
+)

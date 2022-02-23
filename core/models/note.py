@@ -1,12 +1,11 @@
 from flask import current_app
 from sqlalchemy import Column, SmallInteger, String, Text
 
+from .base import ModelMixin, TimestampMixin
+
 with current_app.app_context():
     # Need to use db.Model for migrations to be detected.
     db = current_app.extensions["migrate"].db
-
-
-from .base import ModelMixin, TimestampMixin
 
 
 class Note(ModelMixin, TimestampMixin, db.Model):  # type: ignore
