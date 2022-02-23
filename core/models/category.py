@@ -33,6 +33,6 @@ class CategoryConnector:
             kwargs.pop(field, None)
 
         category = Category(**kwargs)
-        self.database_connector.save_objects_to_database([category])
+        self.database_connector.save_objects([category])
         return category
 
