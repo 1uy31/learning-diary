@@ -32,10 +32,15 @@ class DatabaseConnector:
         Save objects to database.
         :param instances:
         :return:
+        :raise: Exception if fail
         """
         database = self.get_database()
-        database.session.add_all(instances)
-        database.session.commit()
+        try:
+            database.session.add_all(instances)
+            database.session.commit()
+        except Exception as exc:
+            database.session.rollback()
+            raise exc
 
     def save_object(self, instance: Model):
         """
@@ -75,7 +80,7 @@ class DatabaseConnector:
         :param model_class:
         :param primary_keys:
         :return: number of deleted objects
-        :raise: Exception
+        :raise: Exception if fail
         """
         database = self.get_database()
         instances = database.session.query(model_class).filter(model_class.id.in_(primary_keys)).all()
