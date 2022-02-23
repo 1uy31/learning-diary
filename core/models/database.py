@@ -37,7 +37,7 @@ class DatabaseConnector:
         database.session.add_all(instances)
         database.session.commit()
 
-    def add_object(self, instance: Model):
+    def save_object(self, instance: Model):
         """
         Save object to database.
         :param instance:
