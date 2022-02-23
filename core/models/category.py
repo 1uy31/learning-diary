@@ -35,4 +35,3 @@ class CategoryConnector:
         category = Category(**kwargs)
         self.database_connector.save_objects([category])
         return category
-

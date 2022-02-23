@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Tuple, Dict, Type
+from typing import Dict, List, Type, Any
 
 from flask import current_app, g
 from flask_sqlalchemy import Model, SQLAlchemy
@@ -47,13 +47,27 @@ class DatabaseConnector:
         database.session.add(instance)
         database.session.commit()
 
-    def get_objects_by_ids(self, model_class: Type[Model], ids: Tuple[int]) -> List[Model]:
+    def get_object_by_id(self, model_class: Type[Model], primary_key: Any, **kwargs) -> Model:
+        """
+        :param model_class:
+        :param primary_key:
+        :param kwargs: other options documented in linked function of sqlalchemy.orm.session
+        :return: object with matched primary key, of specific model.
+        """
         database = self.get_database()
-        return database.session.get(model_class, ids)
+        return database.session.get(model_class, primary_key, **kwargs)
 
-    def get_objects_by_params(self, model_class: Type[Model], params: Dict[any]) -> List[Model]:
+    def get_object_by_params(
+        self, model_class: Type[Model], params: Dict[str, Any], **kwargs
+    ) -> Model:
+        """
+        :param model_class:
+        :param params:
+        :param kwargs: other options documented in linked function of sqlalchemy.orm.session
+        :return: matched object of specific model.
+        """
         database = self.get_database()
-        return database.session.get(model_class, params)
+        return database.session.get(model_class, params, **kwargs)
 
     def delete_object(self, instance: Model):
         """
