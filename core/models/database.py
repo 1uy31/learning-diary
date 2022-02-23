@@ -27,15 +27,14 @@ class DatabaseConnector:
         if database is not None:
             database.close()
 
-    def save_objects(self, new_objects: List[Model]):
+    def save_objects(self, instances: List[Model]):
         """
-        Save object to database.
-        TODO: error handling?
-        :param new_objects:
+        Save objects to database.
+        :param instances:
         :return:
         """
         database = self.get_database()
-        database.session.add_all(new_objects)
+        database.session.add_all(instances)
         database.session.commit()
 
     def add_object(self, instance: Model):
