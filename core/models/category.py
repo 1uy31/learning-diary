@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List
 
 from flask import current_app
 from sqlalchemy import Column, String
@@ -35,3 +36,25 @@ class CategoryConnector:
         category = Category(**kwargs)
         self.database_connector.save_objects([category])
         return category
+
+    def delete_categories_by_ids(self, primary_keys: List[int]) -> int:
+        """
+        Delete matched Category objects from database.
+        :param primary_keys:
+        :return: number of deleted objects
+        :raise: Exception if fail
+        """
+        return self.database_connector.delete_objects_by_ids(Category, primary_keys)
+
+    def delete_category_by_name(self, name: str):
+        """
+        Delete matched Category object from database.
+        :param name:
+        :return:
+        :raise: Exception if fail
+        """
+        category = db.session.query(Category).filter(Category.name == name).first()
+        if not category:
+            raise Exception(f"There is no Category with name {name}.")
+        db.session.delete(category)
+        db.session.commit()

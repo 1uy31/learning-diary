@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict, List, Type, Any
+from typing import Any, Dict, List, Type
 
 from flask import current_app, g
 from flask_sqlalchemy import Model, SQLAlchemy
@@ -52,7 +52,9 @@ class DatabaseConnector:
         database.session.add(instance)
         database.session.commit()
 
-    def get_object_by_id(self, model_class: Type[Model], primary_key: Any, **kwargs) -> Model:
+    def get_object_by_id(
+        self, model_class: Type[Model], primary_key: Any, **kwargs
+    ) -> Model:
         """
         :param model_class:
         :param primary_key:
@@ -74,7 +76,9 @@ class DatabaseConnector:
         database = self.get_database()
         return database.session.get(model_class, params, **kwargs)
 
-    def delete_objects_by_ids(self, model_class: Type[Model], primary_keys: List[Any]) -> int:
+    def delete_objects_by_ids(
+        self, model_class: Type[Model], primary_keys: List[Any]
+    ) -> int:
         """
         Delete matched objects from database.
         :param model_class:
@@ -83,7 +87,11 @@ class DatabaseConnector:
         :raise: Exception if fail
         """
         database = self.get_database()
-        instances = database.session.query(model_class).filter(model_class.id.in_(primary_keys)).all()
+        instances = (
+            database.session.query(model_class)
+            .filter(model_class.id.in_(primary_keys))
+            .all()
+        )
         try:
             for instance in instances:
                 database.session.delete(instance)
