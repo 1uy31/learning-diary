@@ -1,6 +1,11 @@
 import pytest
 from sqlalchemy.exc import IntegrityError
 
+###
+# Test set up must not rely on DatabaseConnector, as DatabaseConnector should be treated as helper class of
+# CategoryConnector.
+###
+
 
 def test_create_category_happy(app_with_fresh_database):
     with app_with_fresh_database.app_context():

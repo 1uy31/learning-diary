@@ -7,6 +7,15 @@ from flask_sqlalchemy import Model, SQLAlchemy
 
 @dataclass
 class DatabaseConnector:
+    """
+    Contain reusable helper functions for connector layer.
+    Most of the functions do not have tests covered, as:
+        - they only be used by model connectors
+        - they should be tested already with model connectors (CategoryConnector, DiaryConnector, NoteConnector, etc.)
+        - they act on abstract models, so testing them individually would anyway requires specific models
+        like Category, etc.
+    """
+
     def get_database(self) -> SQLAlchemy:
         """
         :return: object used for database operations.
