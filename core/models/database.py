@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List
 
 from flask import current_app, g
 from flask_sqlalchemy import Model, SQLAlchemy
@@ -26,7 +27,7 @@ class DatabaseConnector:
         if database is not None:
             database.close()
 
-    def save_object_to_database(self, new_object: Model):
+    def save_objects_to_database(self, new_objects: List[Model]):
         """
         Save object to database.
         TODO: error handling?
@@ -34,5 +35,5 @@ class DatabaseConnector:
         :return:
         """
         database = self.get_database()
-        database.session.add(new_object)
+        database.session.add_all(new_objects)
         database.session.commit()
