@@ -37,3 +37,13 @@ class DatabaseConnector:
         database = self.get_database()
         database.session.add_all(new_objects)
         database.session.commit()
+
+    def delete_object(self, instance: Model):
+        """
+        Delete object from database.
+        :param instance:
+        :return:
+        """
+        database = self.get_database()
+        database.session.delete(instance)
+        database.session.commit()
