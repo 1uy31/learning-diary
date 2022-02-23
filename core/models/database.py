@@ -39,7 +39,7 @@ class DatabaseConnector:
 
     def save_object(self, instance: Model):
         """
-        Save object to database.
+        Save object to database, mostly used in update.
         :param instance:
         :return:
         """
