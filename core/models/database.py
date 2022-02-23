@@ -69,12 +69,21 @@ class DatabaseConnector:
         database = self.get_database()
         return database.session.get(model_class, params, **kwargs)
 
-    def delete_object(self, instance: Model):
+    def delete_objects_by_ids(self, model_class: Type[Model], primary_keys: List[Any]) -> int:
         """
-        Delete object from database.
-        :param instance:
-        :return:
+        Delete matched objects from database.
+        :param model_class:
+        :param primary_keys:
+        :return: number of deleted objects
+        :raise: Exception
         """
         database = self.get_database()
-        database.session.delete(instance)
-        database.session.commit()
+        instances = database.session.query(model_class).filter(model_class.id.in_(primary_keys)).all()
+        try:
+            for instance in instances:
+                database.session.delete(instance)
+            database.session.commit()
+            return len(instances)
+        except Exception as exc:
+            database.session.rollback()
+            raise exc
