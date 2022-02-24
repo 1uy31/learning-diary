@@ -88,7 +88,9 @@ class DatabaseConnector:
 
         instance = self.get_object_by_id(model_class, primary_key, with_for_update=True)
         if not instance:
-            raise Exception(f"There is no {model_class.__name__} with ID {primary_key}.")
+            raise Exception(
+                f"There is no {model_class.__name__} with ID {primary_key}."
+            )
         update_fields = list(kwargs.keys())
         for field in update_fields:
             setattr(instance, field, kwargs.get(field))
