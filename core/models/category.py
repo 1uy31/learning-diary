@@ -20,7 +20,7 @@ class Category(ModelMixin, TimestampMixin, db.Model):  # type: ignore
         return f"<Category: {self.name}>"
 
     @property
-    def immutable_fields(self):
+    def immutable_fields(self):  # pylint: disable=missing-function-docstring
         return ["id", "created_at", "updated_at"]
 
 
