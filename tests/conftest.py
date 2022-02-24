@@ -1,4 +1,5 @@
 import pytest
+from graphene.test import Client
 
 from core import create_app
 
@@ -41,13 +42,15 @@ def app_with_fresh_database(app):
         database.session.commit()
 
 
-@pytest.fixture(scope="module")
-def test_client(app):
+@pytest.fixture(scope="function")
+def test_client(app_with_fresh_database):
     """
     Client for testing.
-    :param app:
+    :param app_with_fresh_database:
     :return:
     """
-    with app.test_client() as testing_client:
-        with app.app_context():
-            yield testing_client
+    with app_with_fresh_database.app_context():
+        from core.schema import schema
+
+        client = Client(schema)
+        yield client
