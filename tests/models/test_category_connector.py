@@ -1,6 +1,4 @@
-from datetime import datetime
 import pytest
-from sqlalchemy.exc import IntegrityError
 
 ###
 # Test set up must not rely on DatabaseConnector, as DatabaseConnector should be treated as helper class of

@@ -1,12 +1,13 @@
 from datetime import datetime
+
 import pytest
 from sqlalchemy.exc import IntegrityError
 
 
 def test_create_object_happy(app_with_fresh_database):
     with app_with_fresh_database.app_context():
-        from core.models.database import DatabaseConnector
         from core.models import Category
+        from core.models.database import DatabaseConnector
 
         connector = DatabaseConnector()
         category = connector.create_object(Category, name="Test_Category")
@@ -18,8 +19,8 @@ def test_create_object_happy(app_with_fresh_database):
 
 def test_create_object_violates_unique_name_constraint(app_with_fresh_database):
     with app_with_fresh_database.app_context():
-        from core.models.database import DatabaseConnector
         from core.models import Category
+        from core.models.database import DatabaseConnector
 
         connector = DatabaseConnector()
         connector.create_object(Category, name="Test_Category")
@@ -30,8 +31,8 @@ def test_create_object_violates_unique_name_constraint(app_with_fresh_database):
 
 def test_update_object_happy(app_with_fresh_database):
     with app_with_fresh_database.app_context():
-        from core.models.database import DatabaseConnector
         from core.models import Category
+        from core.models.database import DatabaseConnector
 
         database = app_with_fresh_database.extensions["migrate"].db
 
@@ -59,8 +60,8 @@ def test_update_object_happy(app_with_fresh_database):
 
 def test_update_object_raises_not_exist(app_with_fresh_database):
     with app_with_fresh_database.app_context():
-        from core.models.database import DatabaseConnector
         from core.models import Category
+        from core.models.database import DatabaseConnector
 
         connector = DatabaseConnector()
         with pytest.raises(Exception) as exc:
@@ -70,8 +71,8 @@ def test_update_object_raises_not_exist(app_with_fresh_database):
 
 def test_delete_objects_by_ids_happy(app_with_fresh_database):
     with app_with_fresh_database.app_context():
-        from core.models.database import DatabaseConnector
         from core.models import Category
+        from core.models.database import DatabaseConnector
 
         database = app_with_fresh_database.extensions["migrate"].db
 
@@ -99,8 +100,8 @@ def test_delete_objects_by_ids_happy(app_with_fresh_database):
 
 def test_delete_objects_by_ids_return_0(app_with_fresh_database):
     with app_with_fresh_database.app_context():
-        from core.models.database import DatabaseConnector
         from core.models import Category
+        from core.models.database import DatabaseConnector
 
         connector = DatabaseConnector()
         number_of_del_objs = connector.delete_objects_by_ids(
