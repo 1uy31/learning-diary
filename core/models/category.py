@@ -20,6 +20,9 @@ class Category(ModelMixin, TimestampMixin, db.Model):  # type: ignore
     def __str__(self):
         return f"<Category: {self.name}>"
 
+    @property
+    def not_editable_fields(self):
+        return ["id", "created_at", "updated_at"]
 
 @dataclass
 class CategoryConnector:
@@ -30,15 +33,27 @@ class CategoryConnector:
         :param kwargs:
         :return: Category object, which is just saved to DB.
         """
-        for field in ["id", "created_at", "updated_at"]:
+        for field in Category().not_editable_fields:
             kwargs.pop(field, None)
 
         category = Category(**kwargs)
         self.database_connector.save_objects([category])
         return category
 
+    def update_category(self, primary_key: int, **kwargs) -> Category:
+        """
+        TODO: consider remove this kind of proxy
+        Update Category object.
+        :param primary_key:
+        :param kwargs:
+        :return:
+        :raise: Exception if fail
+        """
+        return self.database_connector.update_object(Category, primary_key, **kwargs)
+
     def delete_categories_by_ids(self, primary_keys: List[int]) -> int:
         """
+        TODO: consider remove this kind of proxy
         Delete matched Category objects from database.
         :param primary_keys:
         :return: number of deleted objects

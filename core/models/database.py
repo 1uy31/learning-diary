@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Dict, List, Type
+from typing import Any, List, Type
 
 from flask import current_app, g
 from flask_sqlalchemy import Model, SQLAlchemy
@@ -51,15 +51,31 @@ class DatabaseConnector:
             database.session.rollback()
             raise exc
 
-    def save_object(self, instance: Model):
+    def update_object(self, model_class: Type[Model], primary_key: Any, **kwargs) -> Model:
         """
-        Save object to database, mostly used in update.
-        :param instance:
-        :return:
+        Update object.
+        :param model_class:
+        :param primary_key:
+        :param kwargs:
+        :return: updated object
+        :raise: Exception if fail
         """
         database = self.get_database()
+
+        if getattr(type(model_class()), 'not_editable_fields', None):
+            for field in model_class().not_editable_fields:
+                kwargs.pop(field, None)
+
+        instance = self.get_object_by_id(model_class, primary_key, with_for_update=True)
+        if not instance:
+            raise Exception(f"There is no {model_class} with ID {primary_key}.")
+        update_fields = list(kwargs.keys())
+        for field in update_fields:
+            setattr(instance, field, kwargs.get(field))
+
         database.session.add(instance)
         database.session.commit()
+        return instance
 
     def get_object_by_id(
         self, model_class: Type[Model], primary_key: Any, **kwargs
@@ -72,18 +88,6 @@ class DatabaseConnector:
         """
         database = self.get_database()
         return database.session.get(model_class, primary_key, **kwargs)
-
-    def get_object_by_params(
-        self, model_class: Type[Model], params: Dict[str, Any], **kwargs
-    ) -> Model:
-        """
-        :param model_class:
-        :param params:
-        :param kwargs: other options documented in linked function of sqlalchemy.orm.session
-        :return: matched object of specific model.
-        """
-        database = self.get_database()
-        return database.session.get(model_class, params, **kwargs)
 
     def delete_objects_by_ids(
         self, model_class: Type[Model], primary_keys: List[Any]
