@@ -27,7 +27,7 @@ class Category(ModelMixin, TimestampMixin, db.Model):  # type: ignore
 @dataclass
 class CategoryConnector:
     model = Category
-    database_connector = DatabaseConnector()
+    database_helper = DatabaseConnector()
 
     def update_category(self, primary_key: int, **kwargs) -> Category:
         """
@@ -38,7 +38,7 @@ class CategoryConnector:
         :return:
         :raise: Exception if fail
         """
-        return self.database_connector.update_object(self.model, primary_key, **kwargs)
+        return self.database_helper.update_object(self.model, primary_key, **kwargs)
 
     def delete_categories_by_ids(self, primary_keys: List[int]) -> int:
         """
@@ -48,7 +48,7 @@ class CategoryConnector:
         :return: number of deleted objects
         :raise: Exception if fail
         """
-        return self.database_connector.delete_objects_by_ids(self.model, primary_keys)
+        return self.database_helper.delete_objects_by_ids(self.model, primary_keys)
 
     def delete_category_by_name(self, name: str):
         """
