@@ -21,7 +21,7 @@ class Category(ModelMixin, TimestampMixin, db.Model):  # type: ignore
         return f"<Category: {self.name}>"
 
     @property
-    def not_editable_fields(self):
+    def immutable_fields(self):
         return ["id", "created_at", "updated_at"]
 
 @dataclass

@@ -60,8 +60,8 @@ class DatabaseConnector:
         :raise: Exception if fail
         """
         database = self.get_database()
-        if getattr(type(model_class()), 'not_editable_fields', None):
-            for field in model_class().not_editable_fields:
+        if getattr(type(model_class()), 'immutable_fields', None):
+            for field in model_class().immutable_fields:
                 kwargs.pop(field, None)
 
         instance = model_class(**kwargs)
@@ -80,8 +80,8 @@ class DatabaseConnector:
         """
         database = self.get_database()
 
-        if getattr(type(model_class()), 'not_editable_fields', None):
-            for field in model_class().not_editable_fields:
+        if getattr(type(model_class()), 'immutable_fields', None):
+            for field in model_class().immutable_fields:
                 kwargs.pop(field, None)
 
         instance = self.get_object_by_id(model_class, primary_key, with_for_update=True)
