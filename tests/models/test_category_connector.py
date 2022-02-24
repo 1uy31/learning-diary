@@ -1,3 +1,4 @@
+from datetime import datetime
 import pytest
 from sqlalchemy.exc import IntegrityError
 
@@ -12,7 +13,9 @@ def test_create_category_happy(app_with_fresh_database):
         from core.models import CategoryConnector
 
         connector = CategoryConnector()
-        category = connector.database_helper.create_object(connector.model, name="Test_Category")
+        category = connector.database_helper.create_object(
+            connector.model, name="Test_Category"
+        )
         assert category.name == "Test_Category"
         assert category.id is not None
         assert category.created_at is not None
@@ -26,8 +29,50 @@ def test_create_category_violates_unique_name_constraint(app_with_fresh_database
         connector = CategoryConnector()
         connector.database_helper.create_object(connector.model, name="Test_Category")
         with pytest.raises(IntegrityError) as exc:
-            connector.database_helper.create_object(connector.model, name="Test_Category")
+            connector.database_helper.create_object(
+                connector.model, name="Test_Category"
+            )
         assert "UniqueViolation" in str(exc.value)
+
+
+def test_update_category_happy(app_with_fresh_database):
+    with app_with_fresh_database.app_context():
+        from core.models import CategoryConnector
+
+        database = app_with_fresh_database.extensions["migrate"].db
+
+        connector = CategoryConnector()
+        # Setup
+        category = connector.model(name="Test_Category")
+        database.session.add(category)
+        database.session.commit()
+        assert category.id is not None
+
+        now = datetime.now()
+        updated_category = connector.database_helper.update_object(
+            connector.model,
+            category.id,
+            name="New_Test_Category",
+            dummy_field="This_Will_Be_Ignored",
+            created_at=now,
+        )
+        assert updated_category.id == category.id
+        assert updated_category.created_at == category.created_at
+        assert updated_category.created_at != now
+        assert updated_category.name == "New_Test_Category"
+        assert updated_category.updated_at is not None
+
+
+def test_update_category_raises_not_exist(app_with_fresh_database):
+    with app_with_fresh_database.app_context():
+        from core.models import CategoryConnector
+
+        connector = CategoryConnector()
+        with pytest.raises(Exception) as exc:
+            connector.database_helper.update_object(
+                connector.model, 10, name="Test_Category"
+            )
+        assert str(exc.value) == "There is no Category with ID 10."
 
 
 def test_delete_category_by_name_happy(app_with_fresh_database):
@@ -80,8 +125,8 @@ def test_delete_category_by_ids_happy(app_with_fresh_database):
             assert category.id is not None
 
         # Test:
-        number_of_del_objs = connector.delete_categories_by_ids(
-            [category.id for category in categories]
+        number_of_del_objs = connector.database_helper.delete_objects_by_ids(
+            connector.model, [category.id for category in categories]
         )
         assert number_of_del_objs == 3
         for category in categories:
@@ -94,5 +139,7 @@ def test_delete_category_by_ids_return_0(app_with_fresh_database):
         from core.models import CategoryConnector
 
         connector = CategoryConnector()
-        number_of_del_objs = connector.delete_categories_by_ids([i for i in range(9)])
+        number_of_del_objs = connector.database_helper.delete_objects_by_ids(
+            connector.model, [i for i in range(9)]
+        )
         assert number_of_del_objs == 0

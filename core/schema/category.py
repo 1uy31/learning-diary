@@ -28,6 +28,8 @@ class CreateCategory(graphene.Mutation):
         :return:
         """
 
-        category = category_connector.database_helper.create_object(category_connector.model, name=name)
+        category = category_connector.database_helper.create_object(
+            category_connector.model, name=name
+        )
         category_node = CategoryNode.get_node(_, category.id)
         return category_node

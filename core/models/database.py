@@ -60,7 +60,7 @@ class DatabaseConnector:
         :raise: Exception if fail
         """
         database = self.get_database()
-        if getattr(type(model_class()), 'immutable_fields', None):
+        if getattr(type(model_class()), "immutable_fields", None):
             for field in model_class().immutable_fields:
                 kwargs.pop(field, None)
 
@@ -69,7 +69,9 @@ class DatabaseConnector:
         database.session.commit()
         return instance
 
-    def update_object(self, model_class: Type[Model], primary_key: Any, **kwargs) -> Model:
+    def update_object(
+        self, model_class: Type[Model], primary_key: Any, **kwargs
+    ) -> Model:
         """
         Update object.
         :param model_class:
@@ -80,13 +82,13 @@ class DatabaseConnector:
         """
         database = self.get_database()
 
-        if getattr(type(model_class()), 'immutable_fields', None):
+        if getattr(type(model_class()), "immutable_fields", None):
             for field in model_class().immutable_fields:
                 kwargs.pop(field, None)
 
         instance = self.get_object_by_id(model_class, primary_key, with_for_update=True)
         if not instance:
-            raise Exception(f"There is no {model_class} with ID {primary_key}.")
+            raise Exception(f"There is no {model_class.__name__} with ID {primary_key}.")
         update_fields = list(kwargs.keys())
         for field in update_fields:
             setattr(instance, field, kwargs.get(field))
