@@ -29,14 +29,6 @@ class CategoryConnector:
     model = Category
     database_connector = DatabaseConnector()
 
-    def create_category(self, **kwargs) -> Category:
-        """
-        TODO: consider remove this kind of proxy
-        :param kwargs:
-        :return: Category object, which is just saved to DB.
-        """
-        return self.database_connector.save_object(self.model, **kwargs)
-
     def update_category(self, primary_key: int, **kwargs) -> Category:
         """
         TODO: consider remove this kind of proxy

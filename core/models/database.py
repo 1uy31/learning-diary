@@ -51,7 +51,7 @@ class DatabaseConnector:
     #         database.session.rollback()
     #         raise exc
 
-    def save_object(self, model_class: Type[Model], **kwargs) -> Model:
+    def create_object(self, model_class: Type[Model], **kwargs) -> Model:
         """
         Create new object.
         :param model_class:
