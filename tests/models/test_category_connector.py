@@ -26,7 +26,6 @@ class TestDeleteCategory:
             retrieve_category = database.session.get(Category, category.id)
             assert retrieve_category is None
 
-
     def test_delete_category_by_name_raises_not_exist(self, app_with_fresh_database):
         with app_with_fresh_database.app_context():
             from core.models import CategoryConnector

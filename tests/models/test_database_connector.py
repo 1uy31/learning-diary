@@ -17,7 +17,9 @@ class TestCreateObject:
             assert category.created_at is not None
             assert category.updated_at is None
 
-    def test_create_object_violates_unique_name_constraint(self, app_with_fresh_database):
+    def test_create_object_violates_unique_name_constraint(
+        self, app_with_fresh_database
+    ):
         with app_with_fresh_database.app_context():
             from core.models import Category
             from core.models.database import DatabaseConnector
