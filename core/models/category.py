@@ -26,6 +26,7 @@ class Category(ModelMixin, TimestampMixin, db.Model):  # type: ignore
 
 @dataclass
 class CategoryConnector:
+    model = Category
     database_connector = DatabaseConnector()
 
     def create_category(self, **kwargs) -> Category:
@@ -33,10 +34,10 @@ class CategoryConnector:
         :param kwargs:
         :return: Category object, which is just saved to DB.
         """
-        for field in Category().not_editable_fields:
+        for field in self.model().not_editable_fields:
             kwargs.pop(field, None)
 
-        category = Category(**kwargs)
+        category = self.model(**kwargs)
         self.database_connector.save_objects([category])
         return category
 
@@ -49,7 +50,7 @@ class CategoryConnector:
         :return:
         :raise: Exception if fail
         """
-        return self.database_connector.update_object(Category, primary_key, **kwargs)
+        return self.database_connector.update_object(self.model, primary_key, **kwargs)
 
     def delete_categories_by_ids(self, primary_keys: List[int]) -> int:
         """
@@ -59,7 +60,7 @@ class CategoryConnector:
         :return: number of deleted objects
         :raise: Exception if fail
         """
-        return self.database_connector.delete_objects_by_ids(Category, primary_keys)
+        return self.database_connector.delete_objects_by_ids(self.model, primary_keys)
 
     def delete_category_by_name(self, name: str):
         """
@@ -68,7 +69,7 @@ class CategoryConnector:
         :return:
         :raise: Exception if fail
         """
-        category = db.session.query(Category).filter(Category.name == name).first()
+        category = db.session.query(self.model).filter(self.model.name == name).first()
         if not category:
             raise Exception(f"There is no Category with name {name}.")
         db.session.delete(category)
