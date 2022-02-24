@@ -36,20 +36,20 @@ class DatabaseConnector:
         if database is not None:
             database.close()
 
-    # def save_objects(self, instances: List[Model]):
-    #     """
-    #     Save objects to database.
-    #     :param instances:
-    #     :return:
-    #     :raise: Exception if fail
-    #     """
-    #     database = self.get_database()
-    #     try:
-    #         database.session.add_all(instances)
-    #         database.session.commit()
-    #     except Exception as exc:
-    #         database.session.rollback()
-    #         raise exc
+    def create_objects(self, instances: List[Model]):
+        """
+        Bulk create objects to database.
+        :param instances:
+        :return:
+        :raise: Exception if fail
+        """
+        database = self.get_database()
+        try:
+            database.session.add_all(instances)
+            database.session.commit()
+        except Exception as exc:
+            database.session.rollback()
+            raise exc
 
     def create_object(self, model_class: Type[Model], **kwargs) -> Model:
         """
