@@ -36,20 +36,38 @@ class DatabaseConnector:
         if database is not None:
             database.close()
 
-    def save_objects(self, instances: List[Model]):
+    # def save_objects(self, instances: List[Model]):
+    #     """
+    #     Save objects to database.
+    #     :param instances:
+    #     :return:
+    #     :raise: Exception if fail
+    #     """
+    #     database = self.get_database()
+    #     try:
+    #         database.session.add_all(instances)
+    #         database.session.commit()
+    #     except Exception as exc:
+    #         database.session.rollback()
+    #         raise exc
+
+    def save_object(self, model_class: Type[Model], **kwargs) -> Model:
         """
-        Save objects to database.
-        :param instances:
+        Create new object.
+        :param model_class:
+        :param kwargs:
         :return:
         :raise: Exception if fail
         """
         database = self.get_database()
-        try:
-            database.session.add_all(instances)
-            database.session.commit()
-        except Exception as exc:
-            database.session.rollback()
-            raise exc
+        if getattr(type(model_class()), 'not_editable_fields', None):
+            for field in model_class().not_editable_fields:
+                kwargs.pop(field, None)
+
+        instance = model_class(**kwargs)
+        database.session.add(instance)
+        database.session.commit()
+        return instance
 
     def update_object(self, model_class: Type[Model], primary_key: Any, **kwargs) -> Model:
         """

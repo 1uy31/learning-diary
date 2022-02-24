@@ -31,15 +31,11 @@ class CategoryConnector:
 
     def create_category(self, **kwargs) -> Category:
         """
+        TODO: consider remove this kind of proxy
         :param kwargs:
         :return: Category object, which is just saved to DB.
         """
-        for field in self.model().not_editable_fields:
-            kwargs.pop(field, None)
-
-        category = self.model(**kwargs)
-        self.database_connector.save_objects([category])
-        return category
+        return self.database_connector.save_object(self.model, **kwargs)
 
     def update_category(self, primary_key: int, **kwargs) -> Category:
         """
