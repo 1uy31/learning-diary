@@ -5,7 +5,7 @@ from graphene_sqlalchemy import SQLAlchemyConnectionField
 from core.models import Category as CategoryModel
 from core.models import Diary as DiaryModel
 from core.models import Note as NoteModel
-from core.schema.category import CategoryNode, CreateCategory
+from core.schema.category import CategoryNode, CreateCategory, UpdateCategory
 from core.schema.diary import DiaryNode
 from core.schema.note import NoteNode
 
@@ -61,6 +61,7 @@ class RootQuery(graphene.ObjectType):
 
 class RootMutation(graphene.ObjectType):
     create_category = CreateCategory.Field()
+    update_category = UpdateCategory.Field()
 
 
 schema = graphene.Schema(

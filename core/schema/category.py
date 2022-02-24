@@ -33,3 +33,26 @@ class CreateCategory(graphene.Mutation):
         )
         category_node = CategoryNode.get_node(_, category.id)
         return category_node
+
+
+class UpdateCategory(graphene.Mutation):
+    class Arguments:
+        # TODO: max-length constraint
+        primary_key = graphene.Int(required=True)
+        name = graphene.String(required=True)
+
+    Output = CategoryNode
+
+    def mutate(self, _, primary_key, name):
+        """
+        :param _:
+        :param primary_key:
+        :param name:
+        :return:
+        """
+
+        category = category_connector.database_helper.update_object(
+            category_connector.model, primary_key, name=name
+        )
+        category_node = CategoryNode.get_node(_, category.id)
+        return category_node

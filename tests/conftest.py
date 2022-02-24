@@ -54,3 +54,27 @@ def test_client(app_with_fresh_database):
 
         client = Client(schema)
         yield client
+
+
+@pytest.fixture(scope="function")
+def category_factory(app_with_fresh_database):
+    """
+    :param app_with_fresh_database:
+    :return:
+    """
+    with app_with_fresh_database.app_context():
+        from core.models import CategoryConnector
+
+        connector = CategoryConnector
+
+    def _get(shallow: bool, **kwargs):
+        """
+        :param shallow:
+        :param kwargs:
+        :return: a not yet saved Category object if shallow, else a saved one
+        """
+        if shallow:
+            return connector.model(**kwargs)
+        return connector.database_helper.create_object(connector.model, **kwargs)
+
+    yield _get
