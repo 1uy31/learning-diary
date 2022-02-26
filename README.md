@@ -15,7 +15,7 @@ flask.current_app.app_context().
 - Not convenient to set up, tear down and isolate test database between tests (see conftest.py).
 
 ##### The implementation of SQLAlchemyConnectionField and relay.Node make it a pain to write request.
-- For example, to query name of all categories and topic of their belonging diaries:
+- For example, to get name of all categories and topic of their belonging diaries:
     ```
     query {
      categories {
