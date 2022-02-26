@@ -7,7 +7,7 @@ from core import create_app
 @pytest.fixture(scope="session")
 def app():
     """
-    Flask app for testing, test database is created during setUp and deleted during tearDown.
+    Flask app for testing, database tables are created during setUp and deleted during tearDown.
     :return:
     """
     app = create_app(testing=True)
