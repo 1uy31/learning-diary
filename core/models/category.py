@@ -19,6 +19,7 @@ class Category(ModelMixin, TimestampMixin, db.Model):  # type: ignore
     def __str__(self):
         return f"<Category: {self.name}>"
 
+
 @dataclass
 class CategoryConnector:
     model = Category
