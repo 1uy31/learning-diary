@@ -1,7 +1,6 @@
 from datetime import datetime
 
 import pytest
-import pytz
 from sqlalchemy.exc import IntegrityError
 
 
@@ -47,7 +46,7 @@ class TestUpdateObject:
             database.session.commit()
             assert category.id is not None
 
-            now = datetime.now(tz=pytz.utc)
+            now = datetime.now()
             updated_category = connector.update_object(
                 Category,
                 category.id,

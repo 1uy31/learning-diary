@@ -37,9 +37,11 @@ flake8 = "^4.0.1"
 pylint = "^2.12.2"
 mypy = "^0.931"
 pytest = "^7.0.1"
+factory-boy = "^3.2.1"
 Faker = "^13.0.0"
 coverage = "^6.3.1"
 tox = "^3.24.5"
+
 
 [tool.poetry.scripts]
 #my-script = "#my-scrip"

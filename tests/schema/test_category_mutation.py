@@ -1,7 +1,9 @@
 class TestCategoryQuery:
-    def test_category_query(self, test_client, category_factory):
-        category_factory(shallow=False, name="Test_Category_B")
-        category_factory(shallow=False, name="Test_Category_A")
+    def test_category_query(self, test_client):
+        from tests.models_factory import CategoryFactory
+
+        CategoryFactory.create(name="Test_Category_B")
+        CategoryFactory.create(name="Test_Category_A")
         res = test_client.execute(
             """
             query {
@@ -44,8 +46,10 @@ class TestCreateCategoryMutation:
 
 
 class TestUpdateCategoryMutation:
-    def test_update_category_mutation(self, test_client, category_factory):
-        faked_category = category_factory(shallow=False, name="Test_Category")
+    def test_update_category_mutation(self, test_client):
+        from tests.models_factory import CategoryFactory
+
+        faked_category = CategoryFactory.create(name="Test_Category")
         variables = {
             "primaryKey": faked_category.id,
             "name": "Renamed_Test_Category",
