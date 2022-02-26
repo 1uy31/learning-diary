@@ -16,5 +16,7 @@ class Diary(ModelMixin, TimestampMixin, db.Model):  # type: ignore
     review_count = Column(SmallInteger, default=0)
     rate = Column(SmallInteger, default=0)
 
+    __table_args__ = (db.UniqueConstraint("category", "topic"),)
+
     def __str__(self):
         return f"<Diary {self.id}, topic {self.topic}>"
