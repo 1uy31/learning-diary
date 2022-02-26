@@ -1,4 +1,5 @@
 import factory
+from factory import fuzzy
 from faker import Faker
 from flask import current_app
 
@@ -25,10 +26,10 @@ class NoteFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session = db.session
 
     id = factory.Sequence(lambda n: n + 1)
-    position = factory.fuzzy.FuzzyInteger(1, 50, 1)
-    text = factory.fuzzy.FuzzyText(prefix="text_")
-    image_url = factory.fuzzy.FuzzyText(length=30, prefix="https://image")
-    source_url = factory.fuzzy.FuzzyText(length=30, prefix="https://source")
+    position = factory.Sequence(lambda n: n + 1)
+    text = fuzzy.FuzzyText(prefix="text_")
+    image_url = fuzzy.FuzzyText(length=30, prefix="https://image")
+    source_url = fuzzy.FuzzyText(length=30, prefix="https://source")
 
 
 class DiaryFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -37,9 +38,9 @@ class DiaryFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session = db.session
 
     id = factory.Sequence(lambda n: n + 1)
-    topic = factory.fuzzy.FuzzyText(prefix="topic_")
+    topic = fuzzy.FuzzyText(prefix="topic_")
     category = factory.SubFactory(CategoryFactory)
     note = factory.SubFactory(NoteFactory)
-    source_url = factory.fuzzy.FuzzyText(length=30, prefix="https://")
-    review_count = factory.fuzzy.FuzzyInteger(0, 100, 1)
-    rate = factory.fuzzy.FuzzyInteger(0, 5, 1)
+    source_url = fuzzy.FuzzyText(length=30, prefix="https://")
+    review_count = fuzzy.FuzzyInteger(0, 100, 1)
+    rate = fuzzy.FuzzyInteger(0, 5, 1)

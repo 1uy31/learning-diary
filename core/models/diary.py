@@ -1,6 +1,8 @@
 from flask import current_app
 from sqlalchemy import Column, ForeignKey, Integer, SmallInteger, String
+from sqlalchemy.orm import relationship
 
+from .category import Category
 from .base import ModelMixin, TimestampMixin
 
 with current_app.app_context():
@@ -10,13 +12,14 @@ with current_app.app_context():
 
 class Diary(ModelMixin, TimestampMixin, db.Model):  # type: ignore
     topic = Column(String, nullable=False)
-    category = Column(Integer, ForeignKey("category.id", ondelete="RESTRICT"))
-    note = Column(Integer, ForeignKey("note.id", ondelete="CASCADE"))
+    category_id = Column(Integer, ForeignKey("category.id", ondelete="RESTRICT"))
+    category = relationship(Category, back_populates='diaries')
+    notes = relationship("Note", back_populates='diary')
     source_url = Column(String(256))
     review_count = Column(SmallInteger, default=0)
     rate = Column(SmallInteger, default=0)
 
-    __table_args__ = (db.UniqueConstraint("category", "topic"),)
+    __table_args__ = (db.UniqueConstraint("category_id", "topic"),)
 
     def __str__(self):
-        return f"<Diary {self.id}, topic {self.topic}>"
+        return f"<Category {self.category.name}, topic {self.topic}>"

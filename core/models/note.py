@@ -1,6 +1,8 @@
 from flask import current_app
-from sqlalchemy import Column, SmallInteger, String, Text
+from sqlalchemy import Column, SmallInteger, String, Text, Integer, ForeignKey
+from sqlalchemy.orm import relationship
 
+from .diary import Diary
 from .base import ModelMixin, TimestampMixin
 
 with current_app.app_context():
@@ -9,6 +11,8 @@ with current_app.app_context():
 
 
 class Note(ModelMixin, TimestampMixin, db.Model):  # type: ignore
+    diary_id = Column(Integer, ForeignKey("diary.id", ondelete="CASCADE"))
+    diary = relationship(Diary, back_populates='notes')
     position = Column(
         SmallInteger,
         nullable=False,

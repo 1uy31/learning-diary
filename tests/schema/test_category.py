@@ -1,3 +1,5 @@
+
+
 class TestCategoryQuery:
     def test_category_query(self, test_client):
         from tests.models_factory import CategoryFactory
@@ -15,6 +17,33 @@ class TestCategoryQuery:
             }"""
         )
 
+        result = dict(res["data"]["categories"])
+        names = list(map(lambda x: x["node"]["name"], result["edges"]))
+        assert names == ["Test_Category_A", "Test_Category_B"]
+
+    def test_category_diaries_query(self, test_client):
+        from tests.models_factory import CategoryFactory, DiaryFactory
+
+        category = CategoryFactory.create(name="Test_Category")
+        diaries = [DiaryFactory.create(category=category.id) for _ in range(9)]
+        res = test_client.execute(
+            """
+            query {
+             categories {
+                edges {
+                  node {
+                    name,
+                    diaries {
+                      edges {
+                        node { topic }
+                      }
+                  } }
+                }
+             }
+            }"""
+        )
+
+        assert res is None
         result = dict(res["data"]["categories"])
         names = list(map(lambda x: x["node"]["name"], result["edges"]))
         assert names == ["Test_Category_A", "Test_Category_B"]
