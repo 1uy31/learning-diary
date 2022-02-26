@@ -14,7 +14,7 @@ with current_app.app_context():
 
 class Category(ModelMixin, TimestampMixin, db.Model):  # type: ignore
     name = Column(String(256), nullable=False, unique=True)
-    diaries = relationship("Diary", back_populates='category')
+    diaries = relationship("Diary", back_populates="category")
 
     def __str__(self):
         return f"<Category: {self.name}>"

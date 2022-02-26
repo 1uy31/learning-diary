@@ -12,7 +12,7 @@ with current_app.app_context():
 
 class Note(ModelMixin, TimestampMixin, db.Model):  # type: ignore
     diary_id = Column(Integer, ForeignKey("diary.id", ondelete="CASCADE"))
-    diary = relationship(Diary, back_populates='notes')
+    diary = relationship(Diary, back_populates="notes")
     position = Column(
         SmallInteger,
         nullable=False,

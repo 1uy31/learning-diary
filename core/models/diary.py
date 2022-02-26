@@ -13,8 +13,8 @@ with current_app.app_context():
 class Diary(ModelMixin, TimestampMixin, db.Model):  # type: ignore
     topic = Column(String, nullable=False)
     category_id = Column(Integer, ForeignKey("category.id", ondelete="RESTRICT"))
-    category = relationship(Category, back_populates='diaries')
-    notes = relationship("Note", back_populates='diary')
+    category = relationship(Category, back_populates="diaries")
+    notes = relationship("Note", back_populates="diary")
     source_url = Column(String(256))
     review_count = Column(SmallInteger, default=0)
     rate = Column(SmallInteger, default=0)

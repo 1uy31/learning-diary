@@ -1,5 +1,3 @@
-
-
 class TestCategoryQuery:
     def test_category_query(self, test_client):
         from tests.models_factory import CategoryFactory
@@ -49,7 +47,9 @@ class TestCategoryQuery:
         first_category_node = result["edges"][0]["node"]
         category_name = first_category_node["name"]
         assert category_name == "Test_Category"
-        returned_topics = list(map(lambda x: x["node"]["topic"], first_category_node["diaries"]["edges"]))
+        returned_topics = list(
+            map(lambda x: x["node"]["topic"], first_category_node["diaries"]["edges"])
+        )
         assert returned_topics == created_topics
 
 
