@@ -1,3 +1,23 @@
+class TestCategoryQuery:
+    def test_category_query(self, test_client, category_factory):
+        category_factory(shallow=False, name="Test_Category_B")
+        category_factory(shallow=False, name="Test_Category_A")
+        res = test_client.execute(
+            """
+            query {
+             categories(sort: NAME_ASC) {
+                edges {
+                  node { name }
+                }
+             }
+            }"""
+        )
+
+        result = dict(res["data"]["categories"])
+        names = list(map(lambda x: x["node"]["name"], result["edges"]))
+        assert names == ["Test_Category_A", "Test_Category_B"]
+
+
 class TestCreateCategoryMutation:
     def test_create_category_mutation(self, test_client):
         variables = {

@@ -22,10 +22,9 @@ class RootQuery(graphene.ObjectType):
         SearchResult, q=graphene.String()
     )  # List field for search results
 
-    # Normal fields
-    all_categories = SQLAlchemyConnectionField(CategoryNode.connection)
-    all_diaries = SQLAlchemyConnectionField(DiaryNode.connection)
-    all_notes = SQLAlchemyConnectionField(NoteNode.connection)
+    categories = SQLAlchemyConnectionField(CategoryNode.connection)
+    diaries = SQLAlchemyConnectionField(DiaryNode.connection)
+    notes = SQLAlchemyConnectionField(NoteNode.connection)
 
     def resolve_search(self, info, **args):
         """
