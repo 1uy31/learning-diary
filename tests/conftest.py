@@ -4,7 +4,7 @@ from graphene.test import Client
 from core import create_app
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def app():
     """
     Flask app for testing, test database is created during setUp and deleted during tearDown.

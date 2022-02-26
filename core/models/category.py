@@ -19,11 +19,6 @@ class Category(ModelMixin, TimestampMixin, db.Model):  # type: ignore
     def __str__(self):
         return f"<Category: {self.name}>"
 
-    @property
-    def immutable_fields(self):  # pylint: disable=missing-function-docstring
-        return ["id", "created_at", "updated_at"]
-
-
 @dataclass
 class CategoryConnector:
     model = Category
