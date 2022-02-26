@@ -1,9 +1,12 @@
+from dataclasses import dataclass
+
 from flask import current_app
 from sqlalchemy import Column, ForeignKey, Integer, SmallInteger, String
 from sqlalchemy.orm import relationship
 
 from .category import Category
 from .base import ModelMixin, TimestampMixin
+from .database import DatabaseConnector
 
 with current_app.app_context():
     # Need to use db.Model for migrations to be detected.
@@ -23,3 +26,9 @@ class Diary(ModelMixin, TimestampMixin, db.Model):  # type: ignore
 
     def __str__(self):
         return f"<Category {self.category.name}, topic {self.topic}>"
+
+
+@dataclass
+class DiaryConnector:
+    model = Diary
+    database_helper = DatabaseConnector()
