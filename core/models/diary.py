@@ -4,8 +4,8 @@ from flask import current_app
 from sqlalchemy import Column, ForeignKey, Integer, SmallInteger, String
 from sqlalchemy.orm import relationship
 
-from .category import Category
 from .base import ModelMixin, TimestampMixin
+from .category import Category
 from .database import DatabaseConnector
 
 with current_app.app_context():

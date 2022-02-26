@@ -37,7 +37,8 @@ def app_with_fresh_database(app):
         from core.models import Category, Diary, Note
 
         database = app.extensions["migrate"].db
-        for model in [Category, Diary, Note]:
+        # Must nuke the tables in this specific order:
+        for model in [Note, Diary, Category]:
             database.session.query(model).delete()
         database.session.commit()
 

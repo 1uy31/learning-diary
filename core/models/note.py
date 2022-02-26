@@ -1,9 +1,9 @@
 from flask import current_app
-from sqlalchemy import Column, SmallInteger, String, Text, Integer, ForeignKey
+from sqlalchemy import Column, ForeignKey, Integer, SmallInteger, String, Text
 from sqlalchemy.orm import relationship
 
-from .diary import Diary
 from .base import ModelMixin, TimestampMixin
+from .diary import Diary
 
 with current_app.app_context():
     # Need to use db.Model for migrations to be detected.
