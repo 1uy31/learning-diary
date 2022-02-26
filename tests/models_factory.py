@@ -20,18 +20,6 @@ class CategoryFactory(factory.alchemy.SQLAlchemyModelFactory):
     name = factory.fuzzy.FuzzyText(prefix="category_")
 
 
-class NoteFactory(factory.alchemy.SQLAlchemyModelFactory):
-    class Meta:
-        model = Note
-        sqlalchemy_session = db.session
-
-    id = factory.Sequence(lambda n: n + 1)
-    position = factory.Sequence(lambda n: n + 1)
-    text = fuzzy.FuzzyText(prefix="text_")
-    image_url = fuzzy.FuzzyText(length=30, prefix="https://image")
-    source_url = fuzzy.FuzzyText(length=30, prefix="https://source")
-
-
 class DiaryFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = Diary
@@ -40,7 +28,19 @@ class DiaryFactory(factory.alchemy.SQLAlchemyModelFactory):
     id = factory.Sequence(lambda n: n + 1)
     topic = fuzzy.FuzzyText(prefix="topic_")
     category = factory.SubFactory(CategoryFactory)
-    note = factory.SubFactory(NoteFactory)
     source_url = fuzzy.FuzzyText(length=30, prefix="https://")
     review_count = fuzzy.FuzzyInteger(0, 100, 1)
     rate = fuzzy.FuzzyInteger(0, 5, 1)
+
+
+class NoteFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = Note
+        sqlalchemy_session = db.session
+
+    id = factory.Sequence(lambda n: n + 1)
+    diary = factory.SubFactory(DiaryFactory)
+    position = factory.Sequence(lambda n: n + 1)
+    text = fuzzy.FuzzyText(prefix="text_")
+    image_url = fuzzy.FuzzyText(length=30, prefix="https://image")
+    source_url = fuzzy.FuzzyText(length=30, prefix="https://source")

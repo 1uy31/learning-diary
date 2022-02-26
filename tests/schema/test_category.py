@@ -25,7 +25,9 @@ class TestCategoryQuery:
         from tests.models_factory import CategoryFactory, DiaryFactory
 
         category = CategoryFactory.create(name="Test_Category")
-        diaries = [DiaryFactory.create(category=category.id) for _ in range(9)]
+        diaries = [DiaryFactory.create(category=category) for _ in range(9)]
+        created_topics = list(map(lambda x: x.topic, diaries))
+
         res = test_client.execute(
             """
             query {
@@ -43,10 +45,12 @@ class TestCategoryQuery:
             }"""
         )
 
-        assert res is None
         result = dict(res["data"]["categories"])
-        names = list(map(lambda x: x["node"]["name"], result["edges"]))
-        assert names == ["Test_Category_A", "Test_Category_B"]
+        first_category_node = result["edges"][0]["node"]
+        category_name = first_category_node["name"]
+        assert category_name == "Test_Category"
+        returned_topics = list(map(lambda x: x["node"]["topic"], first_category_node["diaries"]["edges"]))
+        assert returned_topics == created_topics
 
 
 class TestCreateCategoryMutation:
