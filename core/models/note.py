@@ -1,8 +1,11 @@
+from dataclasses import dataclass
+
 from flask import current_app
 from sqlalchemy import Column, ForeignKey, Integer, SmallInteger, String, Text
 from sqlalchemy.orm import relationship
 
 from .base import ModelMixin, TimestampMixin
+from .database import DatabaseConnector
 from .diary import Diary
 
 with current_app.app_context():
@@ -25,3 +28,9 @@ class Note(ModelMixin, TimestampMixin, db.Model):  # type: ignore
 
     def __str__(self):
         return f"<Note {self.id}>"
+
+
+@dataclass
+class NoteConnector:
+    model = Note
+    database_helper = DatabaseConnector()

@@ -4,7 +4,7 @@ from graphene_sqlalchemy import SQLAlchemyConnectionField
 
 from core.schema.category import CategoryNode, CreateCategory, UpdateCategory
 from core.schema.diary import CreateDiary, DeleteDiary, DiaryNode, UpdateDiary
-from core.schema.note import NoteNode
+from core.schema.note import CreateNote, DeleteNote, NoteNode, UpdateNote
 
 
 class RootQuery(graphene.ObjectType):
@@ -21,6 +21,9 @@ class RootMutation(graphene.ObjectType):
     create_diary = CreateDiary.Field()
     update_diary = UpdateDiary.Field()
     delete_diary = DeleteDiary.Field()
+    create_note = CreateNote.Field()
+    update_note = UpdateNote.Field()
+    delete_note = DeleteNote.Field()
 
 
 schema = graphene.Schema(
