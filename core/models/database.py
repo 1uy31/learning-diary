@@ -119,7 +119,8 @@ class DatabaseConnector:
             for instance in instances:
                 database.session.delete(instance)
             database.session.commit()
-            return len(instances)
         except Exception as exc:
             database.session.rollback()
             raise exc
+
+        return len(instances)
