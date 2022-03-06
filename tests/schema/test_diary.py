@@ -40,3 +40,36 @@ class TestCreateDiaryMutation:
         for key in variables.keys():
             assert result[key] == variables[key]
         assert result["category"]["name"] == "Backend"
+
+
+class TestUpdateDiaryMutation:
+    def test_update_diary_mutation(self, test_client):
+        from tests.models_factory import CategoryFactory, DiaryFactory
+
+        init_diary = DiaryFactory.create()
+        assert init_diary.topic.startswith("topic_")
+        assert init_diary.category.name.startswith("category_")
+        variables = {
+            "primaryKey": init_diary.id,
+            "topic": "Flask x Graphql x SQLAlchemy",
+            "categoryId": CategoryFactory.create(name="New-Category").id,
+        }
+        res = test_client.execute(
+            """
+            mutation($primaryKey: Int!, $topic: String, $categoryId: Int, $sourceUrl: String, $reviewCount: Int,
+            $rate: Int) {
+             updateDiary
+             (primaryKey: $primaryKey, topic: $topic, categoryId: $categoryId, sourceUrl: $sourceUrl,
+             reviewCount: $reviewCount, rate: $rate) {
+                topic,
+                category { name }
+             }
+            }""",
+            None,
+            None,
+            variables,
+        )
+
+        result = dict(res["data"]["updateDiary"])
+        assert result["topic"] == "Flask x Graphql x SQLAlchemy"
+        assert result["category"]["name"] == "New-Category"
