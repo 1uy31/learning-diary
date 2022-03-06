@@ -63,3 +63,22 @@ class UpdateDiary(graphene.Mutation):
         )
         diary_node = DiaryNode.get_node(_, diary.id)
         return diary_node
+
+
+class DeleteDiary(graphene.Mutation):
+    class Arguments:
+        primary_key = graphene.Int(required=True)
+
+    success = graphene.Boolean()
+
+    def mutate(self, _, primary_key: int):
+        """
+        :param _:
+        :param primary_key:
+        :return:
+        """
+        # No need to raise error even if there is no matched object:
+        diary_connector.database_helper.delete_objects_by_ids(
+            diary_connector.model, [primary_key]
+        )
+        return DeleteDiary(success=True)

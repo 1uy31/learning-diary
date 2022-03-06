@@ -73,3 +73,40 @@ class TestUpdateDiaryMutation:
         result = dict(res["data"]["updateDiary"])
         assert result["topic"] == "Flask x Graphql x SQLAlchemy"
         assert result["category"]["name"] == "New-Category"
+
+
+class TestDeleteDiaryMutation:
+    def test_delete_diary_mutation(self, test_client):
+        from core.models import DiaryConnector
+        from tests.models_factory import DiaryFactory
+
+        connector = DiaryConnector()
+
+        init_diary = DiaryFactory.create()
+        # The object exists in DB:
+        retrieved_diary = connector.database_helper.get_object_by_id(
+            connector.model, init_diary.id
+        )
+        assert retrieved_diary == init_diary
+
+        res = test_client.execute(
+            """
+            mutation($primaryKey: Int!) {
+             deleteDiary
+             (primaryKey: $primaryKey) {
+                success
+             }
+            }""",
+            None,
+            None,
+            {"primaryKey": init_diary.id},
+        )
+
+        result = dict(res["data"]["deleteDiary"])
+        assert result["success"] is True
+
+        # The object is no longer existed in DB:
+        retrieved_diary = connector.database_helper.get_object_by_id(
+            connector.model, init_diary.id
+        )
+        assert retrieved_diary is None
