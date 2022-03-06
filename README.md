@@ -9,9 +9,8 @@
 - More: https://flask-migrate.readthedocs.io/en/latest/
 
 ### TODO:
-- Finish basic APIs
-- Dockerise
 - Better env handling for different instances
+- Dockerise
 - CI/CD
 
 ### Dislikes about Flask x GraphQL (graphene) x SQLAlchemy:
