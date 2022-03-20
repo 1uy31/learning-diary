@@ -39,9 +39,12 @@ class DatabaseConnector:
         :raise: Exception if fail
         """
         database = self.get_database()
-        # commits transaction at the end, or rolls back if there was an exception raised
-        with database.session.begin() as transaction:
-            transaction.add_all(instances)
+        try:
+            database.session.add_all(instances)
+            database.session.commit()
+        except Exception as exc:
+            database.session.rollback()
+            raise exc
 
     def create_object(self, model_class: Type[Model], **kwargs) -> Model:
         """
@@ -54,8 +57,8 @@ class DatabaseConnector:
         database = self.get_database()
 
         instance = model_class(**kwargs)
-        with database.session.begin() as transaction:
-            transaction.add(instance)
+        database.session.add(instance)
+        database.session.commit()
         return instance
 
     def update_object(
@@ -80,9 +83,8 @@ class DatabaseConnector:
         for field in update_fields:
             setattr(instance, field, kwargs.get(field))
 
-        with database.session.begin() as transaction:
-            transaction.add(instance)
-
+        database.session.add(instance)
+        database.session.commit()
         return instance
 
     def get_object_by_id(
@@ -113,9 +115,12 @@ class DatabaseConnector:
             .filter(model_class.id.in_(primary_keys))
             .all()
         )
-
-        with database.session.begin() as transaction:
+        try:
             for instance in instances:
-                transaction.delete(instance)
+                database.session.delete(instance)
+            database.session.commit()
+        except Exception as exc:
+            database.session.rollback()
+            raise exc
 
         return len(instances)
