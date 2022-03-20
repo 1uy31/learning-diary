@@ -39,6 +39,13 @@ class DatabaseConnector:
         :raise: Exception if fail
         """
         database = self.get_database()
+        # The Session, whenever it is used to talk to the database,
+        # begins a database transaction as soon as it starts communicating.
+        # This transaction remains in progress until the Session is rolled back, committed, or closed.
+
+        # The Session will begin a new transaction if it is used again, subsequent to the previous transaction ending;
+        # from this it follows that the Session is capable of having a lifespan across many transactions,
+        # though only one at a time.
         try:
             database.session.add_all(instances)
             database.session.commit()
