@@ -13,6 +13,8 @@ def app():
     app = create_app(testing=True)
     with app.app_context():
         # This import is important for create_all() to create all tables
+        import core.models  # noqa: F401
+
         database = app.extensions["migrate"].db
         database.create_all()
         yield app
