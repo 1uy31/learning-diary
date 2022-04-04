@@ -33,13 +33,25 @@ def app_with_fresh_database(app):
     """
     yield app
     with app.app_context():
-        # TODO: better way to clean up objects between tests
-        from core.models import Category, Diary, Note
-
         database = app.extensions["migrate"].db
-        # Must nuke the tables in this specific order:
-        for model in [Note, Diary, Category]:
-            database.session.query(model).delete()
+        database.session.execute(
+            """
+            DO $$ 
+              DECLARE 
+                r RECORD;
+            BEGIN
+              FOR r IN 
+                (
+                  SELECT table_name 
+                  FROM information_schema.tables 
+                  WHERE table_schema = current_schema()
+                ) 
+              LOOP
+                 EXECUTE 'TRUNCATE ' || quote_ident(r.table_name) || ' CASCADE';
+              END LOOP;
+            END $$ ;
+            """
+        )
         database.session.commit()
 
 
