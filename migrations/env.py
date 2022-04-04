@@ -6,7 +6,7 @@ from logging.config import fileConfig
 from alembic import context
 from flask import current_app
 
-from core.models import *  # noqa: F401, F403
+import core.models  # noqa: F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

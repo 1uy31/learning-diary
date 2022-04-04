@@ -12,10 +12,7 @@ def app():
     """
     app = create_app(testing=True)
     with app.app_context():
-        # TODO: better way to initialise testing database, especially unable to import * here.
-        # This import is important for create_all() to create corresponding tables, which is very inconvenient!
-        from core.models import Category, Diary, Note  # noqa: F401
-
+        # This import is important for create_all() to create all tables
         database = app.extensions["migrate"].db
         database.create_all()
         yield app
@@ -36,16 +33,16 @@ def app_with_fresh_database(app):
         database = app.extensions["migrate"].db
         database.session.execute(
             """
-            DO $$ 
-              DECLARE 
+            DO $$
+              DECLARE
                 r RECORD;
             BEGIN
-              FOR r IN 
+              FOR r IN
                 (
-                  SELECT table_name 
-                  FROM information_schema.tables 
+                  SELECT table_name
+                  FROM information_schema.tables
                   WHERE table_schema = current_schema()
-                ) 
+                )
               LOOP
                  EXECUTE 'TRUNCATE ' || quote_ident(r.table_name) || ' CASCADE';
               END LOOP;
