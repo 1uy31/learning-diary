@@ -1,11 +1,18 @@
+import toml
 from dotenv import dotenv_values
 from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
-from instance.config import DefaultConfig
+from instance.base_config import BaseConfig
 
 env_values = dotenv_values(".env")
+
+CONFIG_ENV_MAPPER = {
+    "development": "dev_config.toml",
+    "testing": "test_config.toml",
+    "production": "prod_config.toml",
+}
 
 
 def create_app(testing: bool = False) -> Flask:
@@ -17,17 +24,11 @@ def create_app(testing: bool = False) -> Flask:
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
 
-    app.config.from_object(DefaultConfig())
+    app.config.from_object(BaseConfig())
 
-    config_file = (
-        "dev_config.py"
-        if env_values.get("FLASK_ENV", "production") == "development"
-        else "prod_config.py"
-    )
-    if testing:
-        config_file = "test_config.py"
-
-    app.config.from_pyfile(config_file, silent=True)
+    flask_env = "testing" if testing else env_values.get("FLASK_ENV") or "production"
+    config_file = CONFIG_ENV_MAPPER.get(flask_env) or ""
+    app.config.from_file(config_file, load=toml.load)
 
     # For DB migration:
     database = SQLAlchemy(app)

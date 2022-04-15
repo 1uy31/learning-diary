@@ -9,9 +9,7 @@
 - More: https://flask-migrate.readthedocs.io/en/latest/
 
 ### TODO:
-- Better env handling for different instances
-- Dockerise
-- CI/CD
+- Instruction.
 
 ### Dislikes about Flask x GraphQL (graphene) x SQLAlchemy:
 ##### For flask migration to automatically detect change from model, models need to inherit from db.Model (db = flask.current_app.extensions["migrate"].db).

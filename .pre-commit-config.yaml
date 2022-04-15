@@ -17,3 +17,4 @@ repos:
     rev: "v2.12.2"
     hooks:
     - id: pylint
+      exclude: core/__init__.py
