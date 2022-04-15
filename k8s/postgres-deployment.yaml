@@ -1,26 +1,27 @@
 # References:
 # https://www.sumologic.com/blog/kubernetes-deploy-postgres/
 # https://severalnines.com/database-blog/using-kubernetes-deploy-postgresql
+# https://www.youtube.com/watch?v=X48VuDVv0do
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres
+  name: postgres-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: postgres-deployment
   template:
     metadata:
       labels:
-        app: postgres
+        app: postgres-deployment
     spec:
       volumes:
         - name: postgres-storage
           persistentVolumeClaim:
             claimName: postgres-persistent-volume-claim
       containers:
-        - name: postgres
+        - name: postgres-deployment-container
           image: postgres:11
           imagePullPolicy: "IfNotPresent"
           ports:
