@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-deployment
+  labels:
+    app: app-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app-deployment
+  template:
+    metadata:
+      labels:
+        app: app-deployment
+    spec:
+      containers:
+        - name: learning-diary
+          image: learning-diary
+          imagePullPolicy: Never
+          command: ["flask", "run"]
+          ports:
+            - containerPort: 5000
+          env:
+            - name: FLASK_APP
+              value: core.main
+            - name: FLASK_ENV
+              value: production
+            - name: FLASK_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret-config
+                  key: secret_key
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service
+  labels:
+    app: app-service
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000  # Same as containerPort
+      nodePort: 30000
+  selector:
+   app: app-deployment
