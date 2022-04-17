@@ -1,4 +1,4 @@
-# learning-diary (WIP)
+# learning-diary APIs
 ### Purpose:
 - Build first Flask + GraphQL backend
 - Personal use
