@@ -1,0 +1,11 @@
+.idea
+__pycache__
+.DS_Store
+.tox
+.mypy_cache
+.pytest_cache
+.coverage
+coverage_html_report
+staticfiles
+.env
+prod_config.toml
